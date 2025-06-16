@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>เลือกตั้งประธานสี</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .candidate {
+      margin: 20px 0;
+    }
+
+    .candidate input {
+      margin-right: 10px;
+      transform: scale(1.5);
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>เลือกตั้งประธานสี</h1>
+
+  <form id="voteForm">
+    <div class="candidate">
+      <input type="radio" name="candidate" value="1" id="c1">
+      <label for="c1">เบอร์ 1</label>
+    </div>
+    <div class="candidate">
+      <input type="radio" name="candidate" value="2" id="c2">
+      <label for="c2">เบอร์ 2</label>
+    </div>
+    <div class="candidate">
+      <input type="radio" name="candidate" value="3" id="c3">
+      <label for="c3">เบอร์ 3</label>
+    </div>
+
+    <button type="submit">โหวต</button>
+  </form>
+
+  <button onclick="showResults()">ดูผลคะแนน</button>
+
+  <div id="result"></div>
+
+  <script>
+    // เริ่มต้นค่าใน localStorage ถ้ายังไม่มี
+    if (!localStorage.getItem("votes")) {
+      localStorage.setItem("votes", JSON.stringify({1: 0, 2: 0, 3: 0}));
+    }
+
+    document.getElementById("voteForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="candidate"]:checked');
+      if (!selected) {
+        alert("กรุณาเลือกผู้สมัครก่อนโหวตค่ะ");
+        return;
+      }
+
+      const votes = JSON.parse(localStorage.getItem("votes"));
+      votes[selected.value]++;
+      localStorage.setItem("votes", JSON.stringify(votes));
+      alert("โหวตสำเร็จแล้วค่ะ 🎉");
+      document.getElementById("voteForm").reset();
+    });
+
+    function showResults() {
+      const votes = JSON.parse(localStorage.getItem("votes"));
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <p>เบอร์ 1: ${votes[1]} คะแนน</p>
+        <p>เบอร์ 2: ${votes[2]} คะแนน</p>
+        <p>เบอร์ 3: ${votes[3]} คะแนน</p>
+      `;
+    }
+  </script>
+</body>
+</html>
